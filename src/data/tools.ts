@@ -24,6 +24,16 @@ export const TOOL_CATEGORIES: {
 
 export const TOOLS: ToolDefinition[] = [
   {
+    slug: "calculator",
+    name: { en: "Online Calculator", zh: "在线计算器" },
+    description: {
+      en: "A fast keypad calculator with keyboard input and memory keys.",
+      zh: "支持键盘与按钮操作的在线计算器（含记忆键）。",
+    },
+    category: "Finance",
+    isMvp: true,
+  },
+  {
     slug: "mortgage",
     name: { en: "Mortgage Calculator", zh: "房贷计算器" },
     description: {
