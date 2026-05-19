@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick Tools</title>
+  </head>
+  <body>
+    <script>
+      (function () {
+        var l = window.location;
+        var parts = l.pathname.split("/").filter(Boolean);
+        var base = parts.length ? "/" + parts[0] + "/" : "/";
+        var path = l.pathname.slice(base.length - 1);
+        var url =
+          base +
+          "?p=" +
+          encodeURIComponent(path) +
+          "&q=" +
+          encodeURIComponent(l.search.slice(1)) +
+          "&h=" +
+          encodeURIComponent(l.hash.slice(1));
+        l.replace(url);
+      })();
+    </script>
+  </body>
+</html>
