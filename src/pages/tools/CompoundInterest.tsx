@@ -734,6 +734,13 @@ export default function CompoundInterest() {
             >
               {locale === "zh" ? "复利基础指南" : "Compounding Guide"}
             </Link>
+            {" / "}
+            <Link
+              className="underline underline-offset-4"
+              to="/guides/lump-sum-vs-monthly-investing"
+            >
+              {locale === "zh" ? "一次性投入 vs 定投" : "Lump Sum vs Monthly Investing"}
+            </Link>
           </p>
         </SectionCard>
 

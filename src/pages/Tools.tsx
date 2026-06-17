@@ -88,6 +88,26 @@ export default function Tools() {
             title: "复利基础指南",
             desc: "帮助理解长期年限、收益率和定投节奏的作用。",
           },
+          {
+            to: "/guides/fixed-vs-variable-mortgage",
+            title: "固定/浮动利率指南",
+            desc: "帮助比较月供稳定性、利率预期和持有周期。",
+          },
+          {
+            to: "/guides/down-payment-guide",
+            title: "首付准备指南",
+            desc: "帮助平衡首付比例、月供和现金缓冲。",
+          },
+          {
+            to: "/guides/pay-off-loan-early-guide",
+            title: "提前还款指南",
+            desc: "帮助判断提前还款是否真的划算。",
+          },
+          {
+            to: "/guides/lump-sum-vs-monthly-investing",
+            title: "一次性投入 vs 定投",
+            desc: "帮助比较投资节奏、波动承受能力和复利时间。",
+          },
         ],
         groups: [
           {
@@ -182,6 +202,26 @@ export default function Tools() {
           to: "/guides/compound-interest-basics",
           title: "Compounding Guide",
           desc: "Understand the role of timeline, return rate, and recurring contributions.",
+        },
+        {
+          to: "/guides/fixed-vs-variable-mortgage",
+          title: "Fixed vs Variable Mortgage",
+          desc: "Understand payment stability, rate expectations, and refinance timing trade-offs.",
+        },
+        {
+          to: "/guides/down-payment-guide",
+          title: "Down Payment Guide",
+          desc: "Understand how down payment size changes liquidity, payment pressure, and cost.",
+        },
+        {
+          to: "/guides/pay-off-loan-early-guide",
+          title: "Early Payoff Guide",
+          desc: "Understand when extra loan payments help and when cash reserve matters more.",
+        },
+        {
+          to: "/guides/lump-sum-vs-monthly-investing",
+          title: "Lump Sum vs Monthly Investing",
+          desc: "Understand the trade-off between earlier compounding and smoother entry timing.",
         },
       ],
       groups: [

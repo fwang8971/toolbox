@@ -11,14 +11,24 @@ const Terms = lazy(() => import("@/pages/Terms"));
 const CompoundInterestBasics = lazy(
   () => import("@/pages/guides/CompoundInterestBasics"),
 );
+const DownPaymentGuide = lazy(() => import("@/pages/guides/DownPaymentGuide"));
+const FixedVsVariableMortgage = lazy(
+  () => import("@/pages/guides/FixedVsVariableMortgage"),
+);
 const HomeAffordabilityBasics = lazy(
   () => import("@/pages/guides/HomeAffordabilityBasics"),
+);
+const LumpSumVsMonthlyInvesting = lazy(
+  () => import("@/pages/guides/LumpSumVsMonthlyInvesting"),
 );
 const LoanComparisonGuide = lazy(
   () => import("@/pages/guides/LoanComparisonGuide"),
 );
 const MortgagePaymentGuide = lazy(
   () => import("@/pages/guides/MortgagePaymentGuide"),
+);
+const PayOffLoanEarlyGuide = lazy(
+  () => import("@/pages/guides/PayOffLoanEarlyGuide"),
 );
 const Tools = lazy(() => import("@/pages/Tools"));
 const CompoundInterest = lazy(() => import("@/pages/tools/CompoundInterest"));
@@ -57,12 +67,25 @@ export default function App() {
             element={<CompoundInterestBasics />}
           />
           <Route
+            path="/guides/fixed-vs-variable-mortgage"
+            element={<FixedVsVariableMortgage />}
+          />
+          <Route path="/guides/down-payment-guide" element={<DownPaymentGuide />} />
+          <Route
             path="/guides/home-affordability-basics"
             element={<HomeAffordabilityBasics />}
           />
           <Route
             path="/guides/loan-comparison-guide"
             element={<LoanComparisonGuide />}
+          />
+          <Route
+            path="/guides/pay-off-loan-early-guide"
+            element={<PayOffLoanEarlyGuide />}
+          />
+          <Route
+            path="/guides/lump-sum-vs-monthly-investing"
+            element={<LumpSumVsMonthlyInvesting />}
           />
           <Route path="/about" element={<About />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />

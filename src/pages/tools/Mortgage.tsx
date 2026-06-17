@@ -734,6 +734,20 @@ export default function Mortgage() {
             >
               {locale === "zh" ? "购房预算指南" : "Affordability Guide"}
             </Link>
+            {" / "}
+            <Link
+              className="underline underline-offset-4"
+              to="/guides/fixed-vs-variable-mortgage"
+            >
+              {locale === "zh" ? "固定/浮动利率指南" : "Fixed vs Variable Mortgage"}
+            </Link>
+            {" / "}
+            <Link
+              className="underline underline-offset-4"
+              to="/guides/down-payment-guide"
+            >
+              {locale === "zh" ? "首付准备指南" : "Down Payment Guide"}
+            </Link>
           </p>
         </SectionCard>
 

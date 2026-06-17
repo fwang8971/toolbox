@@ -107,6 +107,26 @@ export default function Home() {
             title: "复利基础指南",
             desc: "适合先理解投资周期、收益率和定投节奏的差异。",
           },
+          {
+            to: "/guides/fixed-vs-variable-mortgage",
+            title: "固定/浮动利率指南",
+            desc: "适合比较月供稳定性和未来利率波动带来的风险。",
+          },
+          {
+            to: "/guides/down-payment-guide",
+            title: "首付准备指南",
+            desc: "适合同时看首付比例、现金缓冲和长期利息成本。",
+          },
+          {
+            to: "/guides/pay-off-loan-early-guide",
+            title: "提前还款指南",
+            desc: "适合判断提前还贷能否真正省钱且不伤现金流。",
+          },
+          {
+            to: "/guides/lump-sum-vs-monthly-investing",
+            title: "一次性投入 vs 定投",
+            desc: "适合比较更早开始复利和分批入场的差异。",
+          },
         ],
         faqTitle: "首页常见问题",
         faqs: [
@@ -219,6 +239,26 @@ export default function Home() {
           to: "/guides/compound-interest-basics",
           title: "Compounding Guide",
           desc: "Understand timeline, return assumptions, and recurring contribution effects before modeling.",
+        },
+        {
+          to: "/guides/fixed-vs-variable-mortgage",
+          title: "Fixed vs Variable Mortgage",
+          desc: "Compare payment stability and future rate uncertainty before choosing a mortgage structure.",
+        },
+        {
+          to: "/guides/down-payment-guide",
+          title: "Down Payment Guide",
+          desc: "Balance up-front cash, monthly payment relief, and emergency reserve.",
+        },
+        {
+          to: "/guides/pay-off-loan-early-guide",
+          title: "Early Payoff Guide",
+          desc: "Check APR, cash buffer, and penalties before sending extra loan payments.",
+        },
+        {
+          to: "/guides/lump-sum-vs-monthly-investing",
+          title: "Lump Sum vs Monthly Investing",
+          desc: "Compare earlier compounding with smoother market entry and investing discipline.",
         },
       ],
       faqTitle: "Home FAQ",

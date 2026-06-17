@@ -37,6 +37,26 @@ export default function Guides() {
             title: "复利为什么会拉开长期差距",
             desc: "解释投入周期、收益率和定投节奏如何共同影响最终资产。",
           },
+          {
+            to: "/guides/fixed-vs-variable-mortgage",
+            title: "固定利率和浮动利率房贷怎么选",
+            desc: "帮助比较月供稳定性、利率预期和持有周期带来的差异。",
+          },
+          {
+            to: "/guides/down-payment-guide",
+            title: "首付准备多少才更稳妥",
+            desc: "帮助平衡首付比例、月供压力和应急资金缓冲。",
+          },
+          {
+            to: "/guides/pay-off-loan-early-guide",
+            title: "贷款要不要提前还",
+            desc: "帮助比较利率高低、现金缓冲和提前还款限制。",
+          },
+          {
+            to: "/guides/lump-sum-vs-monthly-investing",
+            title: "一次性投入和每月定投怎么选",
+            desc: "帮助比较更早开始复利和分批入场之间的取舍。",
+          },
         ],
         faqTitle: "专题页常见问题",
         faqs: [
@@ -80,6 +100,26 @@ export default function Guides() {
           to: "/guides/compound-interest-basics",
           title: "Why compounding changes long-term outcomes",
           desc: "Understand how time, return rate, and contribution habits shape ending balance.",
+        },
+        {
+          to: "/guides/fixed-vs-variable-mortgage",
+          title: "How to choose between fixed and variable rate mortgages",
+          desc: "Compare payment stability, rate expectations, and holding period trade-offs.",
+        },
+        {
+          to: "/guides/down-payment-guide",
+          title: "How much down payment is actually safer",
+          desc: "Balance down payment size, payment pressure, and emergency cash.",
+        },
+        {
+          to: "/guides/pay-off-loan-early-guide",
+          title: "Should you pay off a loan early",
+          desc: "Compare APR, cash buffer, and contract restrictions before prepaying.",
+        },
+        {
+          to: "/guides/lump-sum-vs-monthly-investing",
+          title: "Lump sum vs monthly investing",
+          desc: "Compare earlier compounding with smoother market entry over time.",
         },
       ],
       faqTitle: "Guide FAQ",

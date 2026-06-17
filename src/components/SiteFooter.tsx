@@ -22,8 +22,12 @@ export default function SiteFooter() {
           guideHub: "专题指南",
           mortgageGuide: "房贷比较指南",
           affordabilityGuide: "购房预算指南",
+          rateGuide: "固定/浮动利率指南",
+          downPaymentGuide: "首付准备指南",
           loanGuide: "贷款比较指南",
+          payoffGuide: "提前还款指南",
           compoundGuide: "复利基础指南",
+          investingGuide: "一次性投入 vs 定投",
           privacy: "隐私政策",
           terms: "服务条款",
           disclaimer: "免责声明",
@@ -53,8 +57,12 @@ export default function SiteFooter() {
           guideHub: "Guides",
           mortgageGuide: "Mortgage Guide",
           affordabilityGuide: "Affordability Guide",
+          rateGuide: "Fixed vs Variable Mortgage",
+          downPaymentGuide: "Down Payment Guide",
           loanGuide: "Loan Comparison Guide",
+          payoffGuide: "Early Payoff Guide",
           compoundGuide: "Compounding Guide",
+          investingGuide: "Lump Sum vs Monthly Investing",
           privacy: "Privacy Policy",
           terms: "Terms",
           disclaimer: "Disclaimer",
@@ -109,8 +117,12 @@ export default function SiteFooter() {
               <Link to="/guides">{t.guideHub}</Link>
               <Link to="/guides/mortgage-payment-guide">{t.mortgageGuide}</Link>
               <Link to="/guides/home-affordability-basics">{t.affordabilityGuide}</Link>
+              <Link to="/guides/fixed-vs-variable-mortgage">{t.rateGuide}</Link>
+              <Link to="/guides/down-payment-guide">{t.downPaymentGuide}</Link>
               <Link to="/guides/loan-comparison-guide">{t.loanGuide}</Link>
+              <Link to="/guides/pay-off-loan-early-guide">{t.payoffGuide}</Link>
               <Link to="/guides/compound-interest-basics">{t.compoundGuide}</Link>
+              <Link to="/guides/lump-sum-vs-monthly-investing">{t.investingGuide}</Link>
             </div>
           </div>
 

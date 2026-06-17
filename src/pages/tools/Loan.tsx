@@ -675,6 +675,13 @@ export default function Loan() {
             >
               {locale === "zh" ? "房贷比较指南" : "Mortgage Guide"}
             </Link>
+            {" / "}
+            <Link
+              className="underline underline-offset-4"
+              to="/guides/pay-off-loan-early-guide"
+            >
+              {locale === "zh" ? "提前还款指南" : "Early Payoff Guide"}
+            </Link>
           </p>
         </SectionCard>
 
