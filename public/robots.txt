@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://toolbox-3kc.pages.dev/sitemap.xml

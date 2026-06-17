@@ -1,4 +1,6 @@
 import { useLocale } from "@/hooks/useLocale";
+import { ComparisonTable, FaqList, SectionCard } from "@/components/ContentBlocks";
+import { getAbsoluteUrl } from "@/lib/site";
 import ToolShell from "@/pages/tools/ToolShell";
 import { compoundProjection } from "@/lib/finance";
 import { cn } from "@/lib/utils";
@@ -138,6 +140,257 @@ export default function CompoundInterest() {
     return locale === "zh" ? zh : en;
   }, [locale]);
 
+  const content = useMemo(() => {
+    if (locale === "zh") {
+      return {
+        explainTitle: "说明",
+        explain: [
+          "这个工具适合做长期投资、定投储蓄或教育金规划的粗略估算，帮助你理解时间和收益率对资产增长的影响。",
+          "你可以同时调整初始资金、每月定投、年化收益率和复利频率，观察终值与累计收益如何变化。",
+        ],
+        formulaTitle: "公式",
+        formula: [
+          "复利的核心思想是“收益继续产生收益”。在离散复利下，单次本金增长可以写为 A = P × (1 + r / n)^(n × t)。",
+          "本页同时考虑初始资金和持续定投，因此最终结果会综合初始本金的复利增长与每期新增投入后的增长。",
+        ],
+        exampleTitle: "示例",
+        example: [
+          "例如初始资金 10,000，每月定投 500，年化收益率 8%，投资 20 年，终值通常会明显高于单纯投入总额。",
+          "如果你把收益率从 8% 改到 6%，或者把年限从 20 年改到 10 年，结果差异通常会非常明显。",
+        ],
+        caseTitle: "投资场景案例",
+        cases: [
+          {
+            title: "退休金长期积累",
+            summary:
+              "适合估算每月固定投入在 20 到 30 年后的增长效果，帮助判断当前储蓄节奏是否足够。",
+          },
+          {
+            title: "子女教育金准备",
+            summary:
+              "适合根据目标入学时间倒推投入周期，比较提高月供还是延长年限更容易达到目标金额。",
+          },
+          {
+            title: "闲置资金再投资",
+            summary:
+              "如果已经有一笔初始资金，可以用它测试不同收益率和复利频率对最终资产的放大效果。",
+          },
+        ],
+        insightTitle: "结果解读",
+        faqTitle: "常见问题",
+        yearCompareTitle: "不同年限对比",
+        rateCompareTitle: "不同收益率对比",
+        compareYears: "投资年限",
+        compareRate: "年化收益率",
+        compareEnd: "期末总资产",
+        compareContributed: "累计投入",
+        compareInterest: "累计收益",
+        faqs: [
+          {
+            question: "为什么收益率只差几个百分点，结果差很多？",
+            answer:
+              "因为复利会在多年后放大细小差距，尤其在长期投资场景中，时间越长，收益率差异对终值影响越明显。",
+          },
+          {
+            question: "这是不是对未来收益的承诺？",
+            answer:
+              "不是。本页只做数学投影，不代表实际投资回报；真实市场会受到波动、费用、税务和时点影响。",
+          },
+        ],
+      };
+    }
+
+    return {
+      explainTitle: "What This Tool Does",
+      explain: [
+        "Use this page to estimate long-term growth for investing, saving, or contribution-based goals.",
+        "It helps you see how time, contribution size, and return rate combine to shape the final balance.",
+      ],
+      formulaTitle: "Formula",
+      formula: [
+        "Compound growth is based on the idea that gains can generate new gains over time.",
+        "A common discrete compounding expression is A = P × (1 + r / n)^(n × t), while this page also includes recurring contributions in the projection.",
+      ],
+      exampleTitle: "Example",
+      example: [
+        "For an initial 10,000 balance, 500 added monthly, an 8% annual rate, and 20 years, the ending balance can be much larger than the total amount contributed.",
+        "Small changes in annual return or investment duration can create large differences because compounding becomes stronger over time.",
+      ],
+      caseTitle: "Investment Scenarios",
+      cases: [
+        {
+          title: "Retirement planning",
+          summary:
+            "Estimate how steady monthly contributions can grow over 20 to 30 years and check whether your current savings pace is enough.",
+        },
+        {
+          title: "Education fund target",
+          summary:
+            "Work backward from a future education date and compare whether higher monthly deposits or a longer timeline is more realistic.",
+        },
+        {
+          title: "Lump sum reinvestment",
+          summary:
+            "If you already have a starting balance, compare how APR and compounding frequency can amplify that capital over time.",
+        },
+      ],
+      insightTitle: "Result Insights",
+      faqTitle: "FAQ",
+      yearCompareTitle: "Years Comparison",
+      rateCompareTitle: "Rate Comparison",
+      compareYears: "Years",
+      compareRate: "Annual rate",
+      compareEnd: "Ending balance",
+      compareContributed: "Contributed",
+      compareInterest: "Interest",
+      faqs: [
+        {
+          question: "Why do small APR changes create big differences later?",
+          answer:
+            "Because compounding magnifies even small differences over long periods, especially when you keep contributing regularly.",
+        },
+        {
+          question: "Is this a guaranteed investment result?",
+          answer:
+            "No. This is only a math-based projection and does not account for volatility, fees, taxes, or real market timing.",
+        },
+      ],
+    };
+  }, [locale]);
+
+  const currentProjectionYear = parsed.rows[parsed.rows.length - 1]?.year ?? 0;
+
+  const yearComparison = useMemo(() => {
+    const yearOptions = Array.from(
+      new Set(
+        [10, currentProjectionYear, 20, 30]
+          .map((value) => Math.max(1, Math.round(value)))
+          .sort((a, b) => a - b),
+      ),
+    );
+
+    return yearOptions.map((value) => {
+      const projection = compoundProjection({
+        initial: Number(calcInitial) || 0,
+        monthlyContribution: Number(calcMonthly) || 0,
+        annualRatePercent: Number(calcAnnualRate) || 0,
+        years: value,
+        compoundsPerYear: Math.max(1, Number(calcFreq) || 12),
+      });
+      return {
+        label: locale === "zh" ? `${value} 年` : `${value} yr`,
+        endBalance: formatter.format(projection.endBalance),
+        totalContributed: formatter.format(projection.totalContributed),
+        totalInterest: formatter.format(projection.totalInterest),
+      };
+    });
+  }, [
+    calcAnnualRate,
+    calcFreq,
+    calcInitial,
+    calcMonthly,
+    currentProjectionYear,
+    formatter,
+    locale,
+  ]);
+
+  const rateComparison = useMemo(() => {
+    const baseRate = Math.max(0, Number(calcAnnualRate) || 0);
+    const rateOptions = Array.from(
+      new Set(
+        [Math.max(0, baseRate - 2), baseRate, baseRate + 2]
+          .map((value) => Math.round(value * 100) / 100)
+          .sort((a, b) => a - b),
+      ),
+    );
+
+    return rateOptions.map((value) => {
+      const projection = compoundProjection({
+        initial: Number(calcInitial) || 0,
+        monthlyContribution: Number(calcMonthly) || 0,
+        annualRatePercent: value,
+        years: Math.max(1, Number(calcYears) || 1),
+        compoundsPerYear: Math.max(1, Number(calcFreq) || 12),
+      });
+      return {
+        label: `${value}%`,
+        endBalance: formatter.format(projection.endBalance),
+        totalContributed: formatter.format(projection.totalContributed),
+        totalInterest: formatter.format(projection.totalInterest),
+      };
+    });
+  }, [calcAnnualRate, calcFreq, calcInitial, calcMonthly, calcYears, formatter]);
+
+  const insights = useMemo(() => {
+    const contributed = formatter.format(parsed.totalContributed);
+    const ending = formatter.format(parsed.endBalance);
+    const interest = formatter.format(parsed.totalInterest);
+    const interestDominant = parsed.totalInterest >= parsed.totalContributed * 0.5;
+    const longHorizon = Math.max(1, Number(calcYears) || 1) >= 20;
+
+    if (locale === "zh") {
+      return [
+        `当前方案下，累计投入约 ${contributed}，预计期末总资产约 ${ending}，其中累计收益约 ${interest}。`,
+        interestDominant
+          ? "收益部分已经占到较高比重，说明时间和复利开始主导结果，后期增长通常会更明显。"
+          : "当前结果仍然主要由本金和持续定投推动，如果希望放大复利效果，通常需要更长周期或更高收益率。",
+        longHorizon
+          ? "这是偏长期的资金规划模型，更适合退休金、教育金或长期资产积累场景。"
+          : "当前投资周期偏短，建议结合下方年限对比表，观察把周期拉长后的资产增长差异。",
+      ];
+    }
+
+    return [
+      `This setup projects about ${contributed} contributed, ${ending} ending balance, and ${interest} generated by growth.`,
+      interestDominant
+        ? "Growth already accounts for a meaningful share of the final balance, which shows compounding is doing more of the work over time."
+        : "The outcome is still driven mostly by principal and recurring contributions, so a longer timeline or higher rate usually changes the picture more.",
+      longHorizon
+        ? "This is a long-horizon projection and fits goals such as retirement planning, education funding, or long-term wealth building."
+        : "This is still a relatively short horizon, so the years comparison table is useful for seeing how much more time can improve the result.",
+    ];
+  }, [
+    calcYears,
+    formatter,
+    locale,
+    parsed.endBalance,
+    parsed.totalContributed,
+    parsed.totalInterest,
+  ]);
+
+  const schema = useMemo(() => {
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          name: t.title,
+          description: t.desc,
+          applicationCategory: "FinanceApplication",
+          operatingSystem: "Any",
+          isAccessibleForFree: true,
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: calcCurrency,
+          },
+          url: getAbsoluteUrl(location.pathname),
+        },
+        {
+          "@type": "FAQPage",
+          mainEntity: content.faqs.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        },
+      ],
+    };
+  }, [calcCurrency, content.faqs, location.pathname, t.desc, t.title]);
+
   const heroUrl = useMemo(() => {
     const prompt = encodeURIComponent(
       "Realistic photo of a tablet showing an investment growth chart and compound interest calculator interface, green upward line graph, coins and a small plant on a clean modern desk, soft light, minimal fintech aesthetic, high detail, no text",
@@ -206,7 +459,7 @@ export default function CompoundInterest() {
   async function copyShareLink() {
     const search = buildSearch();
     navigate({ pathname: location.pathname, search }, { replace: true });
-    const url = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}${location.pathname}${search}`;
+    const url = getAbsoluteUrl(location.pathname, search);
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -219,6 +472,7 @@ export default function CompoundInterest() {
     <ToolShell
       title={t.title}
       description={t.desc}
+      schema={schema}
       footer={
         <>
           <Link
@@ -455,6 +709,105 @@ export default function CompoundInterest() {
             </table>
           </div>
         </div>
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <SectionCard title={content.explainTitle}>
+          {content.explain.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+          <p>
+            {locale === "zh" ? "常一起使用：" : "Often used with: "}
+            <Link className="underline underline-offset-4" to="/tools/calculator">
+              {locale === "zh" ? "在线计算器" : "Online Calculator"}
+            </Link>
+            {" / "}
+            <Link className="underline underline-offset-4" to="/tools/loan">
+              {locale === "zh" ? "贷款计算器" : "Loan Calculator"}
+            </Link>
+          </p>
+        </SectionCard>
+
+        <SectionCard title={content.formulaTitle}>
+          {content.formula.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+        </SectionCard>
+
+        <SectionCard title={content.exampleTitle}>
+          {content.example.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+        </SectionCard>
+
+        <SectionCard title={content.caseTitle}>
+          <div className="grid gap-3">
+            {content.cases.map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800"
+              >
+                <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                  {item.title}
+                </div>
+                <p className="mt-2 text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+                  {item.summary}
+                </p>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard title={content.insightTitle}>
+          <div className="grid gap-3">
+            {insights.map((item) => (
+              <div
+                key={item}
+                className="rounded-2xl border border-zinc-200 p-4 text-sm leading-7 text-zinc-600 dark:border-zinc-800 dark:text-zinc-400"
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard title={content.yearCompareTitle}>
+          <ComparisonTable
+            columns={[
+              content.compareYears,
+              content.compareEnd,
+              content.compareContributed,
+              content.compareInterest,
+            ]}
+            rows={yearComparison.map((row) => [
+              row.label,
+              row.endBalance,
+              row.totalContributed,
+              row.totalInterest,
+            ])}
+          />
+        </SectionCard>
+
+        <SectionCard title={content.rateCompareTitle}>
+          <ComparisonTable
+            columns={[
+              content.compareRate,
+              content.compareEnd,
+              content.compareContributed,
+              content.compareInterest,
+            ]}
+            rows={rateComparison.map((row) => [
+              row.label,
+              row.endBalance,
+              row.totalContributed,
+              row.totalInterest,
+            ])}
+          />
+        </SectionCard>
+
+        <SectionCard title={content.faqTitle}>
+          <FaqList items={content.faqs} />
+        </SectionCard>
       </div>
     </ToolShell>
   );

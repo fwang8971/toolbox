@@ -1,4 +1,6 @@
 import { useLocale } from "@/hooks/useLocale";
+import { FaqList, SectionCard } from "@/components/ContentBlocks";
+import { getAbsoluteUrl } from "@/lib/site";
 import ToolShell from "@/pages/tools/ToolShell";
 import { cn } from "@/lib/utils";
 import WordTutor from "@/components/WordTutor";
@@ -75,6 +77,107 @@ export default function WordChain() {
     return locale === "zh" ? zh : en;
   }, [locale]);
 
+  const content = useMemo(() => {
+    if (locale === "zh") {
+      return {
+        explainTitle: "说明",
+        explain: [
+          "单词接龙适合做轻量英语练习，重点在于词汇反应速度、拼写准确性和首尾字母意识。",
+          "你可以把它当成个人训练，也可以和朋友轮流输入单词进行小游戏。",
+        ],
+        formulaTitle: "规则逻辑",
+        formula: [
+          "下一个单词必须以上一个单词最后一个字母开头。",
+          "系统只接受英文字母 a-z，并可选择是否禁止重复单词。",
+          "点击历史中的单词后，可以直接进入发音和翻译学习面板继续记忆。",
+        ],
+        exampleTitle: "示例",
+        example: [
+          "如果第一个单词是 apple，那么下一个单词必须以 e 开头，例如 eagle。",
+          "继续输入后，系统会自动提示下一词需要的首字母，并统计当前有效单词数量。",
+        ],
+        faqTitle: "常见问题",
+        faqs: [
+          {
+            question: "为什么我输入的单词被拒绝了？",
+            answer:
+              "常见原因包括：为空、含非字母字符、首字母不符合规则，或者在开启“禁止重复”时重复使用了旧单词。",
+          },
+          {
+            question: "这个工具会验证单词是否为真实词典单词吗？",
+            answer:
+              "当前版本主要做字母规则校验，不是完整词典验证器；它更适合快速练习和发音学习。",
+          },
+        ],
+      };
+    }
+
+    return {
+      explainTitle: "What This Tool Does",
+      explain: [
+        "Word Chain is a lightweight vocabulary game that improves spelling, reaction speed, and awareness of letter patterns.",
+        "It works well for solo practice or turn-based word games with other learners.",
+      ],
+      formulaTitle: "Rule Logic",
+      formula: [
+        "Each new word must begin with the last letter of the previous word.",
+        "The tool accepts letters a-z only and can optionally reject repeated words.",
+        "Clicking a previous word sends it to the pronunciation and translation panel for follow-up study.",
+      ],
+      exampleTitle: "Example",
+      example: [
+        "If the first word is apple, the next word must start with e, such as eagle.",
+        "As you continue, the page shows the required next letter and keeps a count of valid entries.",
+      ],
+      faqTitle: "FAQ",
+      faqs: [
+        {
+          question: "Why was my word rejected?",
+          answer:
+            "Common causes are empty input, non-letter characters, the wrong starting letter, or reuse of an earlier word when repeat blocking is enabled.",
+        },
+        {
+          question: "Does the tool validate dictionary words?",
+          answer:
+            "Not fully. The current version focuses on letter-rule validation and fast language practice rather than full dictionary verification.",
+        },
+      ],
+    };
+  }, [locale]);
+
+  const schema = useMemo(() => {
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          name: t.title,
+          description: t.desc,
+          applicationCategory: "EducationalApplication",
+          operatingSystem: "Any",
+          isAccessibleForFree: true,
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "USD",
+          },
+          url: getAbsoluteUrl(location.pathname),
+        },
+        {
+          "@type": "FAQPage",
+          mainEntity: content.faqs.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        },
+      ],
+    };
+  }, [content.faqs, location.pathname, t.desc, t.title]);
+
   const requiredLetter = useMemo(() => {
     const last = words[words.length - 1];
     if (!last) return null;
@@ -139,7 +242,10 @@ export default function WordChain() {
         words.map((w) => encodeURIComponent(w)).join(","),
       );
     }
-    return `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}${location.pathname}${params.toString() ? `?${params.toString()}` : ""}`;
+    return getAbsoluteUrl(
+      location.pathname,
+      params.toString() ? `?${params.toString()}` : "",
+    );
   }
 
   async function copyShareLink() {
@@ -161,6 +267,7 @@ export default function WordChain() {
     <ToolShell
       title={t.title}
       description={t.desc}
+      schema={schema}
       footer={
         <>
           <Link
@@ -340,6 +447,39 @@ export default function WordChain() {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <SectionCard title={content.explainTitle}>
+          {content.explain.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+          <p>
+            {locale === "zh" ? "继续练习：" : "Continue with: "}
+            <Link
+              className="underline underline-offset-4"
+              to="/tools/word-generator"
+            >
+              {locale === "zh" ? "单词生成器" : "Word Generator"}
+            </Link>
+          </p>
+        </SectionCard>
+
+        <SectionCard title={content.formulaTitle}>
+          {content.formula.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+        </SectionCard>
+
+        <SectionCard title={content.exampleTitle}>
+          {content.example.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+        </SectionCard>
+
+        <SectionCard title={content.faqTitle}>
+          <FaqList items={content.faqs} />
+        </SectionCard>
       </div>
     </ToolShell>
   );

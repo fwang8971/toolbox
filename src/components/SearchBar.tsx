@@ -5,15 +5,19 @@ export default function SearchBar({
   value,
   onChange,
   placeholder,
+  ariaLabel,
 }: {
   value: string;
   onChange: (next: string) => void;
   placeholder?: string;
+  ariaLabel?: string;
 }) {
   return (
     <div className="relative">
       <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-500" />
       <input
+        type="search"
+        aria-label={ariaLabel ?? placeholder ?? "Search tools"}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder ?? "Search tools…"}

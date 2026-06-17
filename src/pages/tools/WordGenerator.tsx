@@ -1,4 +1,6 @@
 import { useLocale } from "@/hooks/useLocale";
+import { FaqList, SectionCard } from "@/components/ContentBlocks";
+import { getAbsoluteUrl } from "@/lib/site";
 import ToolShell from "@/pages/tools/ToolShell";
 import { cn } from "@/lib/utils";
 import WordTutor from "@/components/WordTutor";
@@ -94,6 +96,107 @@ export default function WordGenerator() {
     return locale === "zh" ? zh : en;
   }, [locale]);
 
+  const content = useMemo(() => {
+    if (locale === "zh") {
+      return {
+        explainTitle: "说明",
+        explain: [
+          "这个工具适合做字母模式训练、Wordle 类游戏练习、英语命名灵感或课堂小活动准备。",
+          "你可以同时限制长度、开头、结尾、必须包含字母和排除字母，快速生成一组候选词。",
+        ],
+        formulaTitle: "生成逻辑",
+        formula: [
+          "系统会按你设置的长度和字母规则生成候选字符串。",
+          "开启“更像英文发音”后，核心部分会更偏向辅音和元音交替，从而让结果更接近可读单词。",
+          "本工具按模式生成，不保证输出一定是真实词典单词。",
+        ],
+        exampleTitle: "示例",
+        example: [
+          "如果长度为 5、开头为 st、结尾为 e，并要求包含 ar，系统会尽量生成同时满足这些条件的结果。",
+          "如果规则过严，例如排除了太多字母或长度不够容纳所有限制，系统会提示你放宽条件。",
+        ],
+        faqTitle: "常见问题",
+        faqs: [
+          {
+            question: "为什么生成失败或结果很少？",
+            answer:
+              "通常是因为规则过多、排除字母太多，或者长度不足以容纳开头、结尾和包含条件。可以先减少限制再试。",
+          },
+          {
+            question: "我可以把结果用于真实英语学习吗？",
+            answer:
+              "可以把它作为字母模式和发音练习材料，但如果你需要真实词义和标准拼写，建议结合翻译或词典工具一起使用。",
+          },
+        ],
+      };
+    }
+
+    return {
+      explainTitle: "What This Tool Does",
+      explain: [
+        "This page helps with word-pattern drills, Wordle-style practice, naming ideas, and lightweight classroom activities.",
+        "You can control length, prefixes, suffixes, required letters, and excluded letters to generate candidate words quickly.",
+      ],
+      formulaTitle: "Generation Logic",
+      formula: [
+        "The generator builds candidates based on the length and letter rules you enter.",
+        "When pronounceable mode is on, the core letters lean toward consonant-vowel alternation to feel more word-like.",
+        "Outputs are pattern-based and are not guaranteed to be real dictionary words.",
+      ],
+      exampleTitle: "Example",
+      example: [
+        "If the length is 5, the word must start with st, end with e, and include ar, the tool tries to generate results that match all those constraints.",
+        "If the rules are too strict, the tool will ask you to relax them by removing exclusions or shortening required patterns.",
+      ],
+      faqTitle: "FAQ",
+      faqs: [
+        {
+          question: "Why do I get no results or only a few results?",
+          answer:
+            "The rule set may be too restrictive, especially if the excluded letters remove too many options or the total length is too short.",
+        },
+        {
+          question: "Can I use this for real vocabulary study?",
+          answer:
+            "Yes, but it works best as a pattern and pronunciation helper. For verified meanings and spellings, pair it with a dictionary or translation tool.",
+        },
+      ],
+    };
+  }, [locale]);
+
+  const schema = useMemo(() => {
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          name: t.title,
+          description: t.desc,
+          applicationCategory: "EducationalApplication",
+          operatingSystem: "Any",
+          isAccessibleForFree: true,
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "USD",
+          },
+          url: getAbsoluteUrl(location.pathname),
+        },
+        {
+          "@type": "FAQPage",
+          mainEntity: content.faqs.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        },
+      ],
+    };
+  }, [content.faqs, location.pathname, t.desc, t.title]);
+
   const normalizedRules = useMemo(() => {
     const l = Math.max(1, Math.min(20, Math.floor(Number(length) || 0)));
     const n = Math.max(1, Math.min(200, Math.floor(Number(count) || 0)));
@@ -114,7 +217,7 @@ export default function WordGenerator() {
     if (contains) params.set("c", contains);
     if (exclude) params.set("x", exclude);
     params.set("p", pronounceable ? "1" : "0");
-    return `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}${location.pathname}?${params.toString()}`;
+    return getAbsoluteUrl(location.pathname, `?${params.toString()}`);
   }
 
   async function copyShareLink() {
@@ -225,6 +328,7 @@ export default function WordGenerator() {
     <ToolShell
       title={t.title}
       description={t.desc}
+      schema={schema}
       footer={
         <>
           <Link
@@ -441,6 +545,36 @@ export default function WordGenerator() {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <SectionCard title={content.explainTitle}>
+          {content.explain.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+          <p>
+            {locale === "zh" ? "推荐联动：" : "Pair with: "}
+            <Link className="underline underline-offset-4" to="/tools/word-chain">
+              {locale === "zh" ? "单词接龙" : "Word Chain"}
+            </Link>
+          </p>
+        </SectionCard>
+
+        <SectionCard title={content.formulaTitle}>
+          {content.formula.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+        </SectionCard>
+
+        <SectionCard title={content.exampleTitle}>
+          {content.example.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+        </SectionCard>
+
+        <SectionCard title={content.faqTitle}>
+          <FaqList items={content.faqs} />
+        </SectionCard>
       </div>
     </ToolShell>
   );

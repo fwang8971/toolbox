@@ -1,4 +1,5 @@
 import PageShell from "@/components/PageShell";
+import PolicyLinks from "@/components/PolicyLinks";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/hooks/useLocale";
 import type { ReactNode } from "react";
@@ -6,17 +7,19 @@ import type { ReactNode } from "react";
 export default function ToolShell({
   title,
   description,
+  schema,
   children,
   footer,
 }: {
   title: string;
   description?: string;
+  schema?: unknown;
   children: ReactNode;
   footer?: ReactNode;
 }) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   return (
-    <PageShell>
+    <PageShell title={title} description={description} schema={schema}>
       <div className="container-page">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
           <div>
@@ -45,6 +48,8 @@ export default function ToolShell({
           {footer ? (
             <div className="flex flex-wrap items-center gap-3">{footer}</div>
           ) : null}
+
+          <PolicyLinks locale={locale} />
         </div>
       </div>
     </PageShell>

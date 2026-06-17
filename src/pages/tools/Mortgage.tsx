@@ -1,6 +1,8 @@
 import { useLocale } from "@/hooks/useLocale";
+import { ComparisonTable, FaqList, SectionCard } from "@/components/ContentBlocks";
 import ToolShell from "@/pages/tools/ToolShell";
 import { amortizationSchedule, monthlyPayment, round2 } from "@/lib/finance";
+import { getAbsoluteUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
@@ -160,6 +162,226 @@ export default function Mortgage() {
     return locale === "zh" ? zh : en;
   }, [locale]);
 
+  const content = useMemo(() => {
+    if (locale === "zh") {
+      return {
+        explainTitle: "说明",
+        explain: [
+          "这个页面适合在买房前快速比较不同房价、首付比例、贷款年限和利率下的月供压力。",
+          "你可以先输入预期房价，再调整首付比例和年利率，观察月供、总利息和总还款如何变化。",
+        ],
+        formulaTitle: "公式",
+        formula: [
+          "贷款本金 = 房价 × (1 - 首付比例)。",
+          "月供采用等额本息近似公式：月供 = P × r × (1 + r)^n ÷ ((1 + r)^n - 1)，其中 P 为贷款本金，r 为月利率，n 为总期数。",
+          "摊还表会把每期还款拆成本金和利息，便于你看到前期利息占比通常更高。",
+        ],
+        exampleTitle: "示例",
+        example: [
+          "如果房价为 500,000，首付 20%，年利率 6.5%，贷款 30 年，那么贷款本金约为 400,000。",
+          "在这类场景下，月供通常会明显受到利率变化影响；当利率上升时，总利息增长会非常明显。",
+        ],
+        faqTitle: "常见问题",
+        caseTitle: "买房场景案例",
+        cases: [
+          {
+            title: "首次置业自住房",
+            summary:
+              "适合想控制月供风险的用户，通常会重点看首付比例、30 年月供和总利息的平衡。",
+          },
+          {
+            title: "提高首付降低成本",
+            summary:
+              "如果手上资金更充足，提高首付比例往往能明显压低长期利息支出，适合优先考虑总成本的人群。",
+          },
+          {
+            title: "缩短贷款年限",
+            summary:
+              "如果收入稳定且可承受更高月供，缩短年限通常会显著减少总利息，适合长期成本敏感型购房者。",
+          },
+        ],
+        termCompareTitle: "不同年限对比",
+        rateCompareTitle: "不同利率对比",
+        compareTerm: "贷款年限",
+        compareRate: "年利率",
+        compareMonthly: "月供",
+        compareInterest: "总利息",
+        comparePaid: "总还款",
+        faqs: [
+          {
+            question: "为什么首付比例提高后总利息下降很多？",
+            answer:
+              "因为贷款本金减少后，整个贷款周期内按本金计算的利息也会明显下降，所以不仅月供变低，总利息也会一起降低。",
+          },
+          {
+            question: "这个结果和银行最终审批结果为什么可能不同？",
+            answer:
+              "银行实际审批会结合具体产品、保险、税费、手续费和还款方式，本页结果更适合做买房前的快速估算与方案比较。",
+          },
+        ],
+      };
+    }
+
+    return {
+      explainTitle: "What This Tool Does",
+      explain: [
+        "Use this calculator to compare monthly payments, total interest, and repayment burden before choosing a home loan plan.",
+        "It is useful for testing how price, down payment, APR, and loan length affect affordability.",
+      ],
+      formulaTitle: "Formula",
+      formula: [
+        "Loan principal = home price × (1 - down payment ratio).",
+        "Monthly payment uses the standard amortized loan formula: payment = P × r × (1 + r)^n ÷ ((1 + r)^n - 1).",
+        "The amortization table splits each payment into principal and interest so you can see how the balance falls over time.",
+      ],
+      exampleTitle: "Example",
+      example: [
+        "If the home price is 500,000 with 20% down, 6.5% APR, and a 30-year term, the financed amount is about 400,000.",
+        "In this kind of scenario, even a small APR change can significantly affect both monthly payment and total interest.",
+      ],
+      faqTitle: "FAQ",
+      caseTitle: "Mortgage Scenarios",
+      cases: [
+        {
+          title: "First-home planning",
+          summary:
+            "Useful for buyers who want to balance down payment, monthly affordability, and long-term borrowing cost.",
+        },
+        {
+          title: "Higher down payment strategy",
+          summary:
+            "A larger down payment can sharply reduce total interest, which is often the best fit for cost-focused buyers.",
+        },
+        {
+          title: "Shorter-term payoff",
+          summary:
+            "If cash flow is stable, shortening the term often cuts interest significantly even though the monthly payment increases.",
+        },
+      ],
+      termCompareTitle: "Term Comparison",
+      rateCompareTitle: "APR Comparison",
+      compareTerm: "Term",
+      compareRate: "APR",
+      compareMonthly: "Monthly",
+      compareInterest: "Interest",
+      comparePaid: "Total paid",
+      faqs: [
+        {
+          question: "Why does a higher down payment reduce interest so much?",
+          answer:
+            "Because you borrow less principal, interest accrues on a smaller amount over the entire life of the loan.",
+        },
+        {
+          question: "Why can the bank offer differ from this result?",
+          answer:
+            "Actual lenders may include fees, insurance, taxes, and product-specific rules. This tool is best for fast comparisons and planning.",
+        },
+      ],
+    };
+  }, [locale]);
+
+  const termComparison = useMemo(() => {
+    const yearOptions = Array.from(
+      new Set(
+        [15, 20, parsed.years, 30]
+          .map((value) => Math.max(5, Math.round(value)))
+          .sort((a, b) => a - b),
+      ),
+    );
+
+    return yearOptions.map((termYears) => {
+      const termMonths = termYears * 12;
+      const schedule = amortizationSchedule({
+        principal: parsed.principal,
+        annualRatePercent: parsed.annualRate,
+        termMonths,
+      });
+      const totalPaid = round2(schedule.reduce((sum, row) => sum + row.payment, 0));
+      const totalInterest = round2(totalPaid - parsed.principal);
+      return {
+        label: locale === "zh" ? `${termYears} 年` : `${termYears} yr`,
+        monthly: formatter.format(
+          round2(
+            monthlyPayment({
+              principal: parsed.principal,
+              annualRatePercent: parsed.annualRate,
+              termMonths,
+            }),
+          ),
+        ),
+        totalInterest: formatter.format(totalInterest),
+        totalPaid: formatter.format(totalPaid),
+      };
+    });
+  }, [formatter, locale, parsed.annualRate, parsed.principal, parsed.years]);
+
+  const rateComparison = useMemo(() => {
+    const rateOptions = Array.from(
+      new Set(
+        [Math.max(0, parsed.annualRate - 1), parsed.annualRate, parsed.annualRate + 1]
+          .map((value) => round2(value))
+          .sort((a, b) => a - b),
+      ),
+    );
+
+    return rateOptions.map((rate) => {
+      const schedule = amortizationSchedule({
+        principal: parsed.principal,
+        annualRatePercent: rate,
+        termMonths: parsed.termMonths,
+      });
+      const totalPaid = round2(schedule.reduce((sum, row) => sum + row.payment, 0));
+      const totalInterest = round2(totalPaid - parsed.principal);
+      return {
+        label: `${numberFormatter.format(rate)}%`,
+        monthly: formatter.format(
+          round2(
+            monthlyPayment({
+              principal: parsed.principal,
+              annualRatePercent: rate,
+              termMonths: parsed.termMonths,
+            }),
+          ),
+        ),
+        totalInterest: formatter.format(totalInterest),
+        totalPaid: formatter.format(totalPaid),
+      };
+    });
+  }, [formatter, numberFormatter, parsed.annualRate, parsed.principal, parsed.termMonths]);
+
+  const schema = useMemo(() => {
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["SoftwareApplication", "FinancialProduct"],
+          name: t.title,
+          description: t.desc,
+          applicationCategory: "FinanceApplication",
+          operatingSystem: "Any",
+          isAccessibleForFree: true,
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: calcCurrency,
+          },
+          url: getAbsoluteUrl(location.pathname),
+        },
+        {
+          "@type": "FAQPage",
+          mainEntity: content.faqs.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        },
+      ],
+    };
+  }, [calcCurrency, content.faqs, location.pathname, t.desc, t.title]);
+
   function buildSearch(next?: {
     currency: string;
     price: string;
@@ -214,7 +436,7 @@ export default function Mortgage() {
   async function copyShareLink() {
     const search = buildSearch();
     navigate({ pathname: location.pathname, search }, { replace: true });
-    const url = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}${location.pathname}${search}`;
+    const url = getAbsoluteUrl(location.pathname, search);
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -232,7 +454,7 @@ export default function Mortgage() {
   }, []);
 
   return (
-    <ToolShell title={t.title} description={t.desc} footer={
+    <ToolShell title={t.title} description={t.desc} schema={schema} footer={
       <>
         <Link
           to="/tools"
@@ -477,6 +699,95 @@ export default function Mortgage() {
               : `Term: ${numberFormatter.format(parsed.termMonths)} months · Total paid: ${formatter.format(parsed.totalPaid)}`}
           </div>
         </div>
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <SectionCard title={content.explainTitle}>
+          {content.explain.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+          <p>
+            {locale === "zh" ? "相关工具：" : "Related tools: "}
+            <Link className="underline underline-offset-4" to="/tools/loan">
+              {locale === "zh" ? "贷款计算器" : "Loan Calculator"}
+            </Link>
+            {" / "}
+            <Link
+              className="underline underline-offset-4"
+              to="/tools/compound-interest"
+            >
+              {locale === "zh" ? "复利计算器" : "Compound Interest"}
+            </Link>
+          </p>
+        </SectionCard>
+
+        <SectionCard title={content.formulaTitle}>
+          {content.formula.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+        </SectionCard>
+
+        <SectionCard title={content.exampleTitle}>
+          {content.example.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+        </SectionCard>
+
+        <SectionCard title={content.caseTitle}>
+          <div className="grid gap-3">
+            {content.cases.map((item) => (
+              <div
+                key={item.title}
+                className="rounded-2xl border border-zinc-200 p-4 dark:border-zinc-800"
+              >
+                <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                  {item.title}
+                </div>
+                <p className="mt-2 text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+                  {item.summary}
+                </p>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+
+        <SectionCard title={content.termCompareTitle}>
+          <ComparisonTable
+            columns={[
+              content.compareTerm,
+              content.compareMonthly,
+              content.compareInterest,
+              content.comparePaid,
+            ]}
+            rows={termComparison.map((row) => [
+              row.label,
+              row.monthly,
+              row.totalInterest,
+              row.totalPaid,
+            ])}
+          />
+        </SectionCard>
+
+        <SectionCard title={content.rateCompareTitle}>
+          <ComparisonTable
+            columns={[
+              content.compareRate,
+              content.compareMonthly,
+              content.compareInterest,
+              content.comparePaid,
+            ]}
+            rows={rateComparison.map((row) => [
+              row.label,
+              row.monthly,
+              row.totalInterest,
+              row.totalPaid,
+            ])}
+          />
+        </SectionCard>
+
+        <SectionCard title={content.faqTitle}>
+          <FaqList items={content.faqs} />
+        </SectionCard>
       </div>
     </ToolShell>
   );

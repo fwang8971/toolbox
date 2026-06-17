@@ -7,6 +7,10 @@ import { useLocale } from "@/hooks/useLocale";
 export default function TopNav() {
   const { isDark, toggleTheme } = useTheme();
   const { locale, toggleLocale, t } = useLocale();
+  const labels =
+    locale === "zh"
+      ? { home: "首页", policies: "政策" }
+      : { home: "Home", policies: "Policies" };
 
   return (
     <header className="border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-900 dark:bg-zinc-950/60">
@@ -24,6 +28,20 @@ export default function TopNav() {
         </Link>
 
         <nav className="hidden items-center gap-2 md:flex">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              cn(
+                "rounded-full px-3 py-1.5 text-xs font-medium transition",
+                isActive
+                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-950"
+                  : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+              )
+            }
+          >
+            {labels.home}
+          </NavLink>
           <NavLink
             to="/tools"
             className={({ isActive }) =>
@@ -50,6 +68,19 @@ export default function TopNav() {
           >
             {t("nav.about")}
           </NavLink>
+          <NavLink
+            to="/privacy-policy"
+            className={({ isActive }) =>
+              cn(
+                "rounded-full px-3 py-1.5 text-xs font-medium transition",
+                isActive
+                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-950"
+                  : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+              )
+            }
+          >
+            {labels.policies}
+          </NavLink>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -69,6 +100,64 @@ export default function TopNav() {
           >
             {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
           </button>
+        </div>
+      </div>
+
+      <div className="border-t border-zinc-200 md:hidden dark:border-zinc-900">
+        <div className="container-page flex items-center gap-2 overflow-x-auto py-2">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) =>
+              cn(
+                "whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition",
+                isActive
+                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-950"
+                  : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+              )
+            }
+          >
+            {labels.home}
+          </NavLink>
+          <NavLink
+            to="/tools"
+            className={({ isActive }) =>
+              cn(
+                "whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition",
+                isActive
+                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-950"
+                  : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+              )
+            }
+          >
+            {t("nav.tools")}
+          </NavLink>
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              cn(
+                "whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition",
+                isActive
+                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-950"
+                  : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+              )
+            }
+          >
+            {t("nav.about")}
+          </NavLink>
+          <NavLink
+            to="/privacy-policy"
+            className={({ isActive }) =>
+              cn(
+                "whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition",
+                isActive
+                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-950"
+                  : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+              )
+            }
+          >
+            {labels.policies}
+          </NavLink>
         </div>
       </div>
     </header>

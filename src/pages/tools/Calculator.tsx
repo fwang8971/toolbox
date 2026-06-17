@@ -1,4 +1,6 @@
 import { useLocale } from "@/hooks/useLocale";
+import { FaqList, SectionCard } from "@/components/ContentBlocks";
+import { getAbsoluteUrl } from "@/lib/site";
 import ToolShell from "@/pages/tools/ToolShell";
 import { cn } from "@/lib/utils";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -57,6 +59,107 @@ export default function Calculator() {
     };
     return locale === "zh" ? zh : en;
   }, [locale]);
+
+  const content = useMemo(() => {
+    if (locale === "zh") {
+      return {
+        explainTitle: "说明",
+        explain: [
+          "这是一个适合日常快速计算的在线计算器，支持键盘输入、按钮操作和记忆键。",
+          "除了加减乘除外，你还可以直接做百分比、平方根、倒数和正负号切换。",
+        ],
+        formulaTitle: "逻辑",
+        formula: [
+          "基础四则运算按当前输入值与待执行运算符顺序计算。",
+          "百分比会把当前显示值除以 100；平方根会对当前值开方；倒数会把当前值转为 1 ÷ 当前值。",
+          "记忆键 MC、MR、M+、M- 可帮助你在多步计算中暂存数值。",
+        ],
+        exampleTitle: "示例",
+        example: [
+          "如果你想估算折扣价格，可以先输入原价，再用百分比和乘法快速完成计算。",
+          "如果你在贷款或复利页面需要中间算式，也可以把本页作为辅助计算器一起使用。",
+        ],
+        faqTitle: "常见问题",
+        faqs: [
+          {
+            question: "为什么会出现 Error？",
+            answer:
+              "常见原因包括除以 0，或对负数执行平方根。出现 Error 后可点击 C 重置。",
+          },
+          {
+            question: "这个计算器适合复杂财务公式吗？",
+            answer:
+              "它更适合快速辅助计算。复杂贷款、房贷和复利场景建议直接使用对应的专业工具页。",
+          },
+        ],
+      };
+    }
+
+    return {
+      explainTitle: "What This Tool Does",
+      explain: [
+        "This is a fast general-purpose calculator for everyday math with keyboard support and memory keys.",
+        "It handles basic arithmetic as well as percent, square root, reciprocal, and sign switching.",
+      ],
+      formulaTitle: "Logic",
+      formula: [
+        "Standard operators apply to the current value and the stored pending operation.",
+        "Percent divides the current display by 100, square root applies √x, and reciprocal converts the current value to 1 ÷ x.",
+        "Memory keys let you store and reuse values during multi-step calculations.",
+      ],
+      exampleTitle: "Example",
+      example: [
+        "Use this calculator for quick discount checks, intermediate finance math, or verification while using the other tool pages.",
+        "It works well as a helper when comparing mortgages, loans, or compounding scenarios.",
+      ],
+      faqTitle: "FAQ",
+      faqs: [
+        {
+          question: "Why do I sometimes see Error?",
+          answer:
+            "Typical causes include division by zero or applying square root to a negative number. Press C to reset.",
+        },
+        {
+          question: "Is this meant for advanced finance formulas?",
+          answer:
+            "It is best for quick support calculations. Use the dedicated mortgage, loan, and compound interest pages for richer financial scenarios.",
+        },
+      ],
+    };
+  }, [locale]);
+
+  const schema = useMemo(() => {
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          name: t.title,
+          description: t.desc,
+          applicationCategory: "UtilitiesApplication",
+          operatingSystem: "Any",
+          isAccessibleForFree: true,
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "USD",
+          },
+          url: getAbsoluteUrl(location.pathname),
+        },
+        {
+          "@type": "FAQPage",
+          mainEntity: content.faqs.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        },
+      ],
+    };
+  }, [content.faqs, location.pathname, t.desc, t.title]);
 
   const initial = useMemo(() => {
     const params = new URLSearchParams(location.search);
@@ -240,7 +343,7 @@ export default function Calculator() {
   async function copyShareLink() {
     const search = buildShareSearch(display);
     navigate({ pathname: location.pathname, search }, { replace: true });
-    const url = `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, "")}${location.pathname}${search}`;
+    const url = getAbsoluteUrl(location.pathname, search);
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -350,6 +453,7 @@ export default function Calculator() {
     <ToolShell
       title={t.title}
       description={t.desc}
+      schema={schema}
       footer={
         <>
           <Link
@@ -458,6 +562,43 @@ export default function Calculator() {
             </button>
           </div>
         </div>
+      </div>
+
+      <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <SectionCard title={content.explainTitle}>
+          {content.explain.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+          <p>
+            {locale === "zh" ? "推荐搭配：" : "Recommended with: "}
+            <Link className="underline underline-offset-4" to="/tools/loan">
+              {locale === "zh" ? "贷款计算器" : "Loan Calculator"}
+            </Link>
+            {" / "}
+            <Link
+              className="underline underline-offset-4"
+              to="/tools/compound-interest"
+            >
+              {locale === "zh" ? "复利计算器" : "Compound Interest"}
+            </Link>
+          </p>
+        </SectionCard>
+
+        <SectionCard title={content.formulaTitle}>
+          {content.formula.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+        </SectionCard>
+
+        <SectionCard title={content.exampleTitle}>
+          {content.example.map((item) => (
+            <p key={item}>{item}</p>
+          ))}
+        </SectionCard>
+
+        <SectionCard title={content.faqTitle}>
+          <FaqList items={content.faqs} />
+        </SectionCard>
       </div>
     </ToolShell>
   );
