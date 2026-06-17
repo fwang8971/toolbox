@@ -64,6 +64,31 @@ export default function Tools() {
             desc: "适合长期投资、教育金和退休金目标测算。",
           },
         ],
+        guideTitle: "先读专题，再选工具",
+        guideDesc:
+          "对于房贷和复利这类需要理解背景的主题，专题页能先解释比较框架和常见误区，再进入工具页做更具体的测算。",
+        guideLinks: [
+          {
+            to: "/guides/mortgage-payment-guide",
+            title: "房贷比较指南",
+            desc: "帮助理解月供、总利息和首付之间的取舍。",
+          },
+          {
+            to: "/guides/home-affordability-basics",
+            title: "购房预算指南",
+            desc: "帮助先判断房价区间、现金缓冲和购房风险。",
+          },
+          {
+            to: "/guides/loan-comparison-guide",
+            title: "贷款比较指南",
+            desc: "帮助理解不同报价里 APR、期限和费用的作用。",
+          },
+          {
+            to: "/guides/compound-interest-basics",
+            title: "复利基础指南",
+            desc: "帮助理解长期年限、收益率和定投节奏的作用。",
+          },
+        ],
         groups: [
           {
             title: "贷款与买房测算",
@@ -132,6 +157,31 @@ export default function Tools() {
           to: "/tools/compound-interest",
           title: "Compound Interest",
           desc: "Useful for long-term investing, education funds, and retirement planning.",
+        },
+      ],
+      guideTitle: "Read A Guide First",
+      guideDesc:
+        "For topics like mortgages and compounding, a guide can explain the framework and common mistakes before you use the calculator.",
+      guideLinks: [
+        {
+          to: "/guides/mortgage-payment-guide",
+          title: "Mortgage Guide",
+          desc: "Understand the trade-off between payment, interest cost, and down payment.",
+        },
+        {
+          to: "/guides/home-affordability-basics",
+          title: "Affordability Guide",
+          desc: "Understand target price, cash buffer, and housing risk before borrowing.",
+        },
+        {
+          to: "/guides/loan-comparison-guide",
+          title: "Loan Comparison Guide",
+          desc: "Understand how APR, fees, and term length shape real borrowing cost.",
+        },
+        {
+          to: "/guides/compound-interest-basics",
+          title: "Compounding Guide",
+          desc: "Understand the role of timeline, return rate, and recurring contributions.",
         },
       ],
       groups: [
@@ -296,6 +346,28 @@ export default function Tools() {
           <SectionCard title={content.featuredTitle}>
             <div className="grid gap-4 md:grid-cols-3">
               {content.featuredLinks.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="rounded-2xl border border-zinc-200 p-4 transition hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
+                >
+                  <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                    {item.title}
+                  </div>
+                  <div className="mt-2 text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+                    {item.desc}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </SectionCard>
+
+          <SectionCard title={content.guideTitle}>
+            <p className="text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+              {content.guideDesc}
+            </p>
+            <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {content.guideLinks.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}

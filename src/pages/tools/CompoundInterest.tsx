@@ -726,6 +726,15 @@ export default function CompoundInterest() {
               {locale === "zh" ? "贷款计算器" : "Loan Calculator"}
             </Link>
           </p>
+          <p>
+            {locale === "zh" ? "先读专题：" : "Read next: "}
+            <Link
+              className="underline underline-offset-4"
+              to="/guides/compound-interest-basics"
+            >
+              {locale === "zh" ? "复利基础指南" : "Compounding Guide"}
+            </Link>
+          </p>
         </SectionCard>
 
         <SectionCard title={content.formulaTitle}>

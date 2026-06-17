@@ -719,6 +719,22 @@ export default function Mortgage() {
               {locale === "zh" ? "复利计算器" : "Compound Interest"}
             </Link>
           </p>
+          <p>
+            {locale === "zh" ? "先读专题：" : "Read next: "}
+            <Link
+              className="underline underline-offset-4"
+              to="/guides/mortgage-payment-guide"
+            >
+              {locale === "zh" ? "房贷比较指南" : "Mortgage Guide"}
+            </Link>
+            {" / "}
+            <Link
+              className="underline underline-offset-4"
+              to="/guides/home-affordability-basics"
+            >
+              {locale === "zh" ? "购房预算指南" : "Affordability Guide"}
+            </Link>
+          </p>
         </SectionCard>
 
         <SectionCard title={content.formulaTitle}>

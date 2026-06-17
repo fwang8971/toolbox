@@ -13,11 +13,17 @@ export default function SiteFooter() {
             "面向真实搜索需求的在线工具站，提供房贷、贷款、复利、计算器和英语练习工具。",
           site: "站点",
           tools: "工具",
+          guides: "专题",
           policies: "政策",
           contact: "联系",
           home: "首页",
           allTools: "全部工具",
           about: "关于我们",
+          guideHub: "专题指南",
+          mortgageGuide: "房贷比较指南",
+          affordabilityGuide: "购房预算指南",
+          loanGuide: "贷款比较指南",
+          compoundGuide: "复利基础指南",
           privacy: "隐私政策",
           terms: "服务条款",
           disclaimer: "免责声明",
@@ -38,11 +44,17 @@ export default function SiteFooter() {
             "Search-driven online tools for mortgages, loans, compound interest, calculators, and English practice.",
           site: "Site",
           tools: "Tools",
+          guides: "Guides",
           policies: "Policies",
           contact: "Contact",
           home: "Home",
           allTools: "All Tools",
           about: "About",
+          guideHub: "Guides",
+          mortgageGuide: "Mortgage Guide",
+          affordabilityGuide: "Affordability Guide",
+          loanGuide: "Loan Comparison Guide",
+          compoundGuide: "Compounding Guide",
           privacy: "Privacy Policy",
           terms: "Terms",
           disclaimer: "Disclaimer",
@@ -61,7 +73,7 @@ export default function SiteFooter() {
   return (
     <footer className="border-t border-zinc-200 bg-zinc-50/80 dark:border-zinc-900 dark:bg-zinc-950/80">
       <div className="container-page py-10">
-        <div className="grid gap-8 md:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-5">
           <div>
             <div className="text-sm font-semibold tracking-tight">{t.brand}</div>
             <p className="mt-3 max-w-sm text-sm leading-7 text-zinc-600 dark:text-zinc-400">
@@ -74,6 +86,7 @@ export default function SiteFooter() {
             <div className="mt-3 flex flex-col gap-2 text-sm text-zinc-600 dark:text-zinc-400">
               <Link to="/">{t.home}</Link>
               <Link to="/tools">{t.allTools}</Link>
+              <Link to="/guides">{t.guideHub}</Link>
               <Link to="/about">{t.about}</Link>
             </div>
           </div>
@@ -87,6 +100,17 @@ export default function SiteFooter() {
               <Link to="/tools/calculator">{t.calculator}</Link>
               <Link to="/tools/word-chain">{t.wordChain}</Link>
               <Link to="/tools/word-generator">{t.wordGenerator}</Link>
+            </div>
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold">{t.guides}</div>
+            <div className="mt-3 flex flex-col gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+              <Link to="/guides">{t.guideHub}</Link>
+              <Link to="/guides/mortgage-payment-guide">{t.mortgageGuide}</Link>
+              <Link to="/guides/home-affordability-basics">{t.affordabilityGuide}</Link>
+              <Link to="/guides/loan-comparison-guide">{t.loanGuide}</Link>
+              <Link to="/guides/compound-interest-basics">{t.compoundGuide}</Link>
             </div>
           </div>
 

@@ -9,8 +9,8 @@ export default function TopNav() {
   const { locale, toggleLocale, t } = useLocale();
   const labels =
     locale === "zh"
-      ? { home: "首页", policies: "政策" }
-      : { home: "Home", policies: "Policies" };
+      ? { home: "首页", guides: "专题", policies: "政策" }
+      : { home: "Home", guides: "Guides", policies: "Policies" };
 
   return (
     <header className="border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-900 dark:bg-zinc-950/60">
@@ -67,6 +67,19 @@ export default function TopNav() {
             }
           >
             {t("nav.about")}
+          </NavLink>
+          <NavLink
+            to="/guides"
+            className={({ isActive }) =>
+              cn(
+                "rounded-full px-3 py-1.5 text-xs font-medium transition",
+                isActive
+                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-950"
+                  : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+              )
+            }
+          >
+            {labels.guides}
           </NavLink>
           <NavLink
             to="/privacy-policy"
@@ -144,6 +157,19 @@ export default function TopNav() {
             }
           >
             {t("nav.about")}
+          </NavLink>
+          <NavLink
+            to="/guides"
+            className={({ isActive }) =>
+              cn(
+                "whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition",
+                isActive
+                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-950"
+                  : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+              )
+            }
+          >
+            {labels.guides}
           </NavLink>
           <NavLink
             to="/privacy-policy"

@@ -660,6 +660,22 @@ export default function Loan() {
               {locale === "zh" ? "在线计算器" : "Online Calculator"}
             </Link>
           </p>
+          <p>
+            {locale === "zh" ? "相关阅读：" : "Related reading: "}
+            <Link
+              className="underline underline-offset-4"
+              to="/guides/loan-comparison-guide"
+            >
+              {locale === "zh" ? "贷款比较指南" : "Loan Comparison Guide"}
+            </Link>
+            {" / "}
+            <Link
+              className="underline underline-offset-4"
+              to="/guides/mortgage-payment-guide"
+            >
+              {locale === "zh" ? "房贷比较指南" : "Mortgage Guide"}
+            </Link>
+          </p>
         </SectionCard>
 
         <SectionCard title={content.formulaTitle}>

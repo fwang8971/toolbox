@@ -83,6 +83,31 @@ export default function Home() {
           { to: "/tools/loan", label: "贷款计算器" },
           { to: "/tools/compound-interest", label: "复利计算器" },
         ],
+        guideTitle: "先看专题，再做计算",
+        guideDesc:
+          "如果你还在理解房贷比较逻辑或复利增长原理，先阅读专题页，再进入工具页输入真实数字，通常更容易得到有判断价值的结果。",
+        guideLinks: [
+          {
+            to: "/guides/mortgage-payment-guide",
+            title: "房贷比较指南",
+            desc: "适合购房前先理解月供、总利息和首付之间的关系。",
+          },
+          {
+            to: "/guides/home-affordability-basics",
+            title: "购房预算指南",
+            desc: "适合先判断房价区间、月供压力和首付后的现金缓冲。",
+          },
+          {
+            to: "/guides/loan-comparison-guide",
+            title: "贷款比较指南",
+            desc: "适合比较不同贷款报价、APR 和期数结构。",
+          },
+          {
+            to: "/guides/compound-interest-basics",
+            title: "复利基础指南",
+            desc: "适合先理解投资周期、收益率和定投节奏的差异。",
+          },
+        ],
         faqTitle: "首页常见问题",
         faqs: [
           {
@@ -170,6 +195,31 @@ export default function Home() {
         { to: "/tools/mortgage", label: "Mortgage Calculator" },
         { to: "/tools/loan", label: "Loan Calculator" },
         { to: "/tools/compound-interest", label: "Compound Interest" },
+      ],
+      guideTitle: "Read A Guide Before You Calculate",
+      guideDesc:
+        "If you still need context on mortgage comparisons or compound growth, the guide pages explain the logic first and then send you to the matching calculator.",
+      guideLinks: [
+        {
+          to: "/guides/mortgage-payment-guide",
+          title: "Mortgage Guide",
+          desc: "Understand payments, total interest, and down payment trade-offs before using the calculator.",
+        },
+        {
+          to: "/guides/home-affordability-basics",
+          title: "Affordability Guide",
+          desc: "Check budget range, emergency buffer, and income stability before choosing a home target.",
+        },
+        {
+          to: "/guides/loan-comparison-guide",
+          title: "Loan Comparison Guide",
+          desc: "Understand APR, fees, and term structure before comparing offers.",
+        },
+        {
+          to: "/guides/compound-interest-basics",
+          title: "Compounding Guide",
+          desc: "Understand timeline, return assumptions, and recurring contribution effects before modeling.",
+        },
       ],
       faqTitle: "Home FAQ",
       faqs: [
@@ -427,6 +477,27 @@ export default function Home() {
                 className="inline-flex h-10 items-center justify-center rounded-2xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-800 transition hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:border-zinc-700"
               >
                 {item.label}
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-2xl font-semibold tracking-tight">{homeContent.guideTitle}</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+            {homeContent.guideDesc}
+          </p>
+          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {homeContent.guideLinks.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="rounded-2xl border border-zinc-200 bg-white p-5 transition hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700"
+              >
+                <div className="text-sm font-semibold">{item.title}</div>
+                <p className="mt-2 text-sm leading-7 text-zinc-600 dark:text-zinc-400">
+                  {item.desc}
+                </p>
               </Link>
             ))}
           </div>
